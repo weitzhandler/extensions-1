@@ -1,12 +1,11 @@
-﻿{
+{
   "Logging": {
     "LogLevel": {
       "Default": "Debug",
       "System": "Information",
       "Microsoft": "Information"
     },
-    "Console":
-    {
+    "Console": {
       "IncludeScopes": "true",
       "TimestampFormat": "[HH:mm:ss] ",
       "LogToStandardErrorThreshold": "Warning"

@@ -20,6 +20,11 @@ namespace Microsoft.Extensions.Logging.Test
         private const string _loggerName = "test";
         private const string _state = "This is a test, and {curly braces} are just fine!";
         private readonly Func<object, Exception, string> _defaultFormatter = (state, exception) => state.ToString();
+        private readonly IEnumerable<ILogFormatter> _formatters = new ILogFormatter[]
+        {
+            new DefaultLogFormatter(new TestOptionsMonitor(new ConsoleLoggerOptions())),
+            new SystemdLogFormatter(new TestOptionsMonitor(new ConsoleLoggerOptions()))
+        };
 
         private static (ConsoleLogger Logger, ConsoleSink Sink, ConsoleSink ErrorSink, Func<LogLevel, string> GetLevelPrefix, int WritesPerMsg) SetUp(ConsoleLoggerOptions options = null)
         {
@@ -32,9 +37,16 @@ namespace Microsoft.Extensions.Logging.Test
             consoleLoggerProcessor.Console = console;
             consoleLoggerProcessor.ErrorConsole = errorConsole;
 
-            var logger = new ConsoleLogger(_loggerName, consoleLoggerProcessor);
-            logger.ScopeProvider = new LoggerExternalScopeProvider();
-            logger.Options = options ?? new ConsoleLoggerOptions();
+            var testOptions = options ?? new ConsoleLoggerOptions();
+            var scopeProvider = new LoggerExternalScopeProvider();
+            var formatters = new Dictionary<string, ILogFormatter>()
+            {
+                { "Default", new DefaultLogFormatter(new TestOptionsMonitor(testOptions)) },
+                { "Systemd", new SystemdLogFormatter(new TestOptionsMonitor(testOptions)) }
+            };
+            var logger = new ConsoleLogger(_loggerName, consoleLoggerProcessor, formatters);
+            logger.ScopeProvider = scopeProvider;
+            logger.Options = testOptions;
             Func<LogLevel, string> levelAsString;
             int writesPerMsg;
             switch (logger.Options.Format)
@@ -993,7 +1005,7 @@ namespace Microsoft.Extensions.Logging.Test
             var processor = new ConsoleLoggerProcessor();
             processor.Console = console;
 
-            var logger = new ConsoleLogger(_loggerName, loggerProcessor: processor);
+            var logger = new ConsoleLogger(_loggerName, loggerProcessor: processor, _formatters.ToDictionary(f => f.Name));
             logger.Options = new ConsoleLoggerOptions();
             // Act
             processor.Dispose();
@@ -1022,7 +1034,7 @@ namespace Microsoft.Extensions.Logging.Test
         {
             // Arrange
             var monitor = new TestOptionsMonitor(new ConsoleLoggerOptions() { DisableColors = true });
-            var loggerProvider = new ConsoleLoggerProvider(monitor);
+            var loggerProvider = new ConsoleLoggerProvider(monitor, _formatters);
             var logger = (ConsoleLogger)loggerProvider.CreateLogger("Name");
 
             // Act & Assert
@@ -1053,7 +1065,7 @@ namespace Microsoft.Extensions.Logging.Test
         {
             // Arrange
             var monitor = new TestOptionsMonitor(new ConsoleLoggerOptions());
-            var loggerProvider = new ConsoleLoggerProvider(monitor);
+            var loggerProvider = new ConsoleLoggerProvider(monitor, _formatters);
             var logger = (ConsoleLogger)loggerProvider.CreateLogger("Name");
 
             // Act & Assert
@@ -1083,7 +1095,7 @@ namespace Microsoft.Extensions.Logging.Test
         public void ConsoleLoggerOptions_TimeStampFormat_MultipleReloads()
         {
             var monitor = new TestOptionsMonitor(new ConsoleLoggerOptions());
-            var loggerProvider = new ConsoleLoggerProvider(monitor);
+            var loggerProvider = new ConsoleLoggerProvider(monitor, _formatters);
             var logger = (ConsoleLogger)loggerProvider.CreateLogger("Name");
 
             Assert.Null(logger.Options.TimestampFormat);
@@ -1098,7 +1110,7 @@ namespace Microsoft.Extensions.Logging.Test
         {
             // Arrange
             var monitor = new TestOptionsMonitor(new ConsoleLoggerOptions() { IncludeScopes = true });
-            var loggerProvider = new ConsoleLoggerProvider(monitor);
+            var loggerProvider = new ConsoleLoggerProvider(monitor, _formatters);
             var logger = (ConsoleLogger)loggerProvider.CreateLogger("Name");
 
             // Act & Assert
@@ -1129,7 +1141,7 @@ namespace Microsoft.Extensions.Logging.Test
         {
             // Arrange
             var monitor = new TestOptionsMonitor(new ConsoleLoggerOptions());
-            var loggerProvider = new ConsoleLoggerProvider(monitor);
+            var loggerProvider = new ConsoleLoggerProvider(monitor, _formatters);
             var logger = (ConsoleLogger)loggerProvider.CreateLogger("Name");
 
             // Act & Assert
@@ -1143,7 +1155,7 @@ namespace Microsoft.Extensions.Logging.Test
         {
             // Arrange
             var monitor = new TestOptionsMonitor(new ConsoleLoggerOptions());
-            var loggerProvider = new ConsoleLoggerProvider(monitor);
+            var loggerProvider = new ConsoleLoggerProvider(monitor, _formatters);
             var logger = (ConsoleLogger)loggerProvider.CreateLogger("Name");
 
             // Act & Assert
