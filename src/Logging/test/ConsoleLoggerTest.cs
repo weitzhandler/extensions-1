@@ -1253,7 +1253,7 @@ namespace Microsoft.Extensions.Logging.Test
             {
             }
 
-            public override void EnqueueMessage(LogMessageEntry message)
+            public override void EnqueueMessage(Action<IConsole, IConsole> message)
             {
                 WriteMessage(message);
             }

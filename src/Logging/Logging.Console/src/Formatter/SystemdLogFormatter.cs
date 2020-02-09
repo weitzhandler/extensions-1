@@ -28,76 +28,76 @@ namespace Microsoft.Extensions.Logging.Console
 
         internal ConsoleLoggerOptions Options { get; set; }
 
-        public LogMessageEntry Format(IExternalScopeProvider scopeProvider, LogLevel logLevel, string logName, int eventId, string message, Exception exception)
+        public Action<IConsole, IConsole> Format(IExternalScopeProvider scopeProvider, LogLevel logLevel, string logName, int eventId, string message, Exception exception)
         {
-            Options = _options.CurrentValue;
-            var logBuilder = _logBuilder;
-            _logBuilder = null;
-
-            if (logBuilder == null)
+            return (console, errorConsole) =>
             {
-                logBuilder = new StringBuilder();
-            }
+                Options = _options.CurrentValue;
 
-            // systemd reads messages from standard out line-by-line in a '<pri>message' format.
-            // newline characters are treated as message delimiters, so we must replace them.
-            // Messages longer than the journal LineMax setting (default: 48KB) are cropped.
-            // Example:
-            // <6>ConsoleApp.Program[10] Request received
+                var targetConsole = logLevel >= Options.LogToStandardErrorThreshold ? errorConsole : console;
+                var logBuilder = _logBuilder;
+                _logBuilder = null;
 
-            // loglevel
-            var logLevelString = GetSyslogSeverityString(logLevel);
-            logBuilder.Append(logLevelString);
+                if (logBuilder == null)
+                {
+                    logBuilder = new StringBuilder();
+                }
 
-            // timestamp
-            var timestampFormat = Options.TimestampFormat;
-            if (timestampFormat != null)
-            {
-                var dateTime = GetCurrentDateTime();
-                logBuilder.Append(dateTime.ToString(timestampFormat));
-            }
+                // systemd reads messages from standard out line-by-line in a '<pri>message' format.
+                // newline characters are treated as message delimiters, so we must replace them.
+                // Messages longer than the journal LineMax setting (default: 48KB) are cropped.
+                // Example:
+                // <6>ConsoleApp.Program[10] Request received
 
-            // category and event id
-            logBuilder.Append(logName);
-            logBuilder.Append("[");
-            logBuilder.Append(eventId);
-            logBuilder.Append("]");
+                // loglevel
+                var logLevelString = GetSyslogSeverityString(logLevel);
+                logBuilder.Append(logLevelString);
 
-            // scope information
-            GetScopeInformation(logBuilder, scopeProvider);
+                // timestamp
+                var timestampFormat = Options.TimestampFormat;
+                if (timestampFormat != null)
+                {
+                    var dateTime = GetCurrentDateTime();
+                    logBuilder.Append(dateTime.ToString(timestampFormat));
+                }
 
-            // message
-            if (!string.IsNullOrEmpty(message))
-            {
-                logBuilder.Append(' ');
+                // category and event id
+                logBuilder.Append(logName);
+                logBuilder.Append("[");
+                logBuilder.Append(eventId);
+                logBuilder.Append("]");
+
+                // scope information
+                GetScopeInformation(logBuilder, scopeProvider);
+
                 // message
-                AppendAndReplaceNewLine(logBuilder, message);
-            }
+                if (!string.IsNullOrEmpty(message))
+                {
+                    logBuilder.Append(' ');
+                    // message
+                    AppendAndReplaceNewLine(logBuilder, message);
+                }
 
-            // exception
-            // System.InvalidOperationException at Namespace.Class.Function() in File:line X
-            if (exception != null)
-            {
-                logBuilder.Append(' ');
-                AppendAndReplaceNewLine(logBuilder, exception.ToString());
-            }
+                // exception
+                // System.InvalidOperationException at Namespace.Class.Function() in File:line X
+                if (exception != null)
+                {
+                    logBuilder.Append(' ');
+                    AppendAndReplaceNewLine(logBuilder, exception.ToString());
+                }
 
-            // newline delimiter
-            logBuilder.Append(Environment.NewLine);
+                // newline delimiter
+                logBuilder.Append(Environment.NewLine);
 
+                targetConsole.Write(logBuilder.ToString(), null, null);
 
-            var formattedMessage = logBuilder.ToString();
-            logBuilder.Clear();
-            if (logBuilder.Capacity > 1024)
-            {
-                logBuilder.Capacity = 1024;
-            }
-            _logBuilder = logBuilder;
-
-            return new LogMessageEntry(
-                message: formattedMessage,
-                logAsError: logLevel >= Options.LogToStandardErrorThreshold
-            );
+                logBuilder.Clear();
+                if (logBuilder.Capacity > 1024)
+                {
+                    logBuilder.Capacity = 1024;
+                }
+                _logBuilder = logBuilder;
+            };
 
             static void AppendAndReplaceNewLine(StringBuilder sb, string message)
             {

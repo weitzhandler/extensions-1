@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.Logging.Console
     {
         private const int _maxQueuedMessages = 1024;
 
-        private readonly BlockingCollection<LogMessageEntry> _messageQueue = new BlockingCollection<LogMessageEntry>(_maxQueuedMessages);
+        private readonly BlockingCollection<Action<IConsole, IConsole>> _messageQueue = new BlockingCollection<Action<IConsole, IConsole>>(_maxQueuedMessages);
         private readonly Thread _outputThread;
 
         public IConsole Console;
@@ -28,7 +28,7 @@ namespace Microsoft.Extensions.Logging.Console
             _outputThread.Start();
         }
 
-        public virtual void EnqueueMessage(LogMessageEntry message)
+        public virtual void EnqueueMessage(Action<IConsole, IConsole> message)
         {
             if (!_messageQueue.IsAddingCompleted)
             {
@@ -49,22 +49,23 @@ namespace Microsoft.Extensions.Logging.Console
         }
 
         // for testing
-        internal virtual void WriteMessage(LogMessageEntry message)
+        internal virtual void WriteMessage(Action<IConsole, IConsole> message)
         {
-            var console = message.LogAsError ? ErrorConsole : Console;
+            message(Console, ErrorConsole);
+            //var console = message.LogAsError ? ErrorConsole : Console;
 
-            if (message.TimeStamp != null)
-            {
-                console.Write(message.TimeStamp, message.MessageColor, message.MessageColor);
-            }
+            //if (message.TimeStamp != null)
+            //{
+            //    console.Write(message.TimeStamp, message.MessageColor, message.MessageColor);
+            //}
 
-            if (message.LevelString != null)
-            {
-                console.Write(message.LevelString, message.LevelBackground, message.LevelForeground);
-            }
+            //if (message.LevelString != null)
+            //{
+            //    console.Write(message.LevelString, message.LevelBackground, message.LevelForeground);
+            //}
 
-            console.Write(message.Message, message.MessageColor, message.MessageColor);
-            console.Flush();
+            //console.Write(message.Message, message.MessageColor, message.MessageColor);
+            //console.Flush();
         }
 
         private void ProcessLogQueue()
