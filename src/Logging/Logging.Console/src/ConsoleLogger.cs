@@ -52,8 +52,11 @@ namespace Microsoft.Extensions.Logging.Console
         public virtual void WriteMessage(LogLevel logLevel, string logName, int eventId, string message, Exception exception)
         {
             var formatter = _formatters[Options.Formatter ?? Options.Format.ToString()];
-            var entry = formatter.Format(ScopeProvider, logLevel, logName, eventId, message, exception);
-            _queueProcessor.EnqueueMessage(entry);
+            _queueProcessor.EnqueueMessage((console, errorConsole) =>
+            {
+                var targetConsole = logLevel >= Options.LogToStandardErrorThreshold ? errorConsole : console;
+                formatter.Format(targetConsole, ScopeProvider, logLevel, logName, eventId, message, exception);
+            });
         }
 
 

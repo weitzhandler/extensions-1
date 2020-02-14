@@ -33,81 +33,76 @@ namespace Microsoft.Extensions.Logging.Console
 
         internal ConsoleLoggerOptions Options { get; set; }
 
-        public Action<IConsole, IConsole> Format(IExternalScopeProvider scopeProvider, LogLevel logLevel, string logName, int eventId, string message, Exception exception)
+        public void Format(IConsole console, IExternalScopeProvider scopeProvider, LogLevel logLevel, string logName, int eventId, string message, Exception exception)
         {
-            return (console, errorConsole) =>
+            Options = _options.CurrentValue;
+
+            // Example:
+            // INFO: ConsoleApp.Program[10]
+            //       Request received
+
+            string timestamp = null;
+            var timestampFormat = Options.TimestampFormat;
+            if (timestampFormat != null)
             {
-                Options = _options.CurrentValue;
+                var dateTime = GetCurrentDateTime();
+                timestamp = dateTime.ToString(timestampFormat);
 
-                var targetConsole = logLevel >= Options.LogToStandardErrorThreshold ? errorConsole : console;
+                console.Write(timestamp, DefaultConsoleColor, DefaultConsoleColor);
+            }
 
-                // Example:
-                // INFO: ConsoleApp.Program[10]
-                //       Request received
+            var logLevelColors = GetLogLevelConsoleColors(logLevel);
+            var logLevelString = GetLogLevelString(logLevel);
 
-                string timestamp = null;
-                var timestampFormat = Options.TimestampFormat;
-                if (timestampFormat != null)
-                {
-                    var dateTime = GetCurrentDateTime();
-                    timestamp = dateTime.ToString(timestampFormat);
+            console.Write(logLevelString, logLevelColors.Background, logLevelColors.Foreground);
 
-                    targetConsole.Write(timestamp, DefaultConsoleColor, DefaultConsoleColor);
-                }
+            var logBuilder = _logBuilder;
+            _logBuilder = null;
 
-                var logLevelColors = GetLogLevelConsoleColors(logLevel);
-                var logLevelString = GetLogLevelString(logLevel);
+            if (logBuilder == null)
+            {
+                logBuilder = new StringBuilder();
+            }
 
-                targetConsole.Write(logLevelString, logLevelColors.Background, logLevelColors.Foreground);
+            // category and event id
+            logBuilder.Append(_loglevelPadding);
+            logBuilder.Append(logName);
+            logBuilder.Append("[");
+            logBuilder.Append(eventId);
+            logBuilder.AppendLine("]");
 
-                var logBuilder = _logBuilder;
-                _logBuilder = null;
+            // scope information
+            GetScopeInformation(logBuilder, scopeProvider);
 
-                if (logBuilder == null)
-                {
-                    logBuilder = new StringBuilder();
-                }
+            if (!string.IsNullOrEmpty(message))
+            {
+                // message
+                logBuilder.Append(_messagePadding);
 
-                // category and event id
-                logBuilder.Append(_loglevelPadding);
-                logBuilder.Append(logName);
-                logBuilder.Append("[");
-                logBuilder.Append(eventId);
-                logBuilder.AppendLine("]");
+                var len = logBuilder.Length;
+                logBuilder.AppendLine(message);
+                logBuilder.Replace(Environment.NewLine, _newLineWithMessagePadding, len, message.Length);
+            }
 
-                // scope information
-                GetScopeInformation(logBuilder, scopeProvider);
+            // Example:
+            // System.InvalidOperationException
+            //    at Namespace.Class.Function() in File:line X
+            if (exception != null)
+            {
+                // exception message
+                logBuilder.AppendLine(exception.ToString());
+            }
 
-                if (!string.IsNullOrEmpty(message))
-                {
-                    // message
-                    logBuilder.Append(_messagePadding);
+            console.Write(logBuilder.ToString(), DefaultConsoleColor, DefaultConsoleColor);
 
-                    var len = logBuilder.Length;
-                    logBuilder.AppendLine(message);
-                    logBuilder.Replace(Environment.NewLine, _newLineWithMessagePadding, len, message.Length);
-                }
+            logBuilder.Clear();
+            if (logBuilder.Capacity > 1024)
+            {
+                logBuilder.Capacity = 1024;
+            }
+            _logBuilder = logBuilder;
 
-                // Example:
-                // System.InvalidOperationException
-                //    at Namespace.Class.Function() in File:line X
-                if (exception != null)
-                {
-                    // exception message
-                    logBuilder.AppendLine(exception.ToString());
-                }
-
-                targetConsole.Write(logBuilder.ToString(), DefaultConsoleColor, DefaultConsoleColor);
-
-                logBuilder.Clear();
-                if (logBuilder.Capacity > 1024)
-                {
-                    logBuilder.Capacity = 1024;
-                }
-                _logBuilder = logBuilder;
-
-                console.Flush();
-            };
+            console.Flush();
         }
 
         private DateTime GetCurrentDateTime()

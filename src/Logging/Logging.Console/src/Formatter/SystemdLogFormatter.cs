@@ -28,76 +28,72 @@ namespace Microsoft.Extensions.Logging.Console
 
         internal ConsoleLoggerOptions Options { get; set; }
 
-        public Action<IConsole, IConsole> Format(IExternalScopeProvider scopeProvider, LogLevel logLevel, string logName, int eventId, string message, Exception exception)
+        public void Format(IConsole console, IExternalScopeProvider scopeProvider, LogLevel logLevel, string logName, int eventId, string message, Exception exception)
         {
-            return (console, errorConsole) =>
+            Options = _options.CurrentValue;
+
+            var logBuilder = _logBuilder;
+            _logBuilder = null;
+
+            if (logBuilder == null)
             {
-                Options = _options.CurrentValue;
+                logBuilder = new StringBuilder();
+            }
 
-                var targetConsole = logLevel >= Options.LogToStandardErrorThreshold ? errorConsole : console;
-                var logBuilder = _logBuilder;
-                _logBuilder = null;
+            // systemd reads messages from standard out line-by-line in a '<pri>message' format.
+            // newline characters are treated as message delimiters, so we must replace them.
+            // Messages longer than the journal LineMax setting (default: 48KB) are cropped.
+            // Example:
+            // <6>ConsoleApp.Program[10] Request received
 
-                if (logBuilder == null)
-                {
-                    logBuilder = new StringBuilder();
-                }
+            // loglevel
+            var logLevelString = GetSyslogSeverityString(logLevel);
+            logBuilder.Append(logLevelString);
 
-                // systemd reads messages from standard out line-by-line in a '<pri>message' format.
-                // newline characters are treated as message delimiters, so we must replace them.
-                // Messages longer than the journal LineMax setting (default: 48KB) are cropped.
-                // Example:
-                // <6>ConsoleApp.Program[10] Request received
+            // timestamp
+            var timestampFormat = Options.TimestampFormat;
+            if (timestampFormat != null)
+            {
+                var dateTime = GetCurrentDateTime();
+                logBuilder.Append(dateTime.ToString(timestampFormat));
+            }
 
-                // loglevel
-                var logLevelString = GetSyslogSeverityString(logLevel);
-                logBuilder.Append(logLevelString);
+            // category and event id
+            logBuilder.Append(logName);
+            logBuilder.Append("[");
+            logBuilder.Append(eventId);
+            logBuilder.Append("]");
 
-                // timestamp
-                var timestampFormat = Options.TimestampFormat;
-                if (timestampFormat != null)
-                {
-                    var dateTime = GetCurrentDateTime();
-                    logBuilder.Append(dateTime.ToString(timestampFormat));
-                }
+            // scope information
+            GetScopeInformation(logBuilder, scopeProvider);
 
-                // category and event id
-                logBuilder.Append(logName);
-                logBuilder.Append("[");
-                logBuilder.Append(eventId);
-                logBuilder.Append("]");
-
-                // scope information
-                GetScopeInformation(logBuilder, scopeProvider);
-
+            // message
+            if (!string.IsNullOrEmpty(message))
+            {
+                logBuilder.Append(' ');
                 // message
-                if (!string.IsNullOrEmpty(message))
-                {
-                    logBuilder.Append(' ');
-                    // message
-                    AppendAndReplaceNewLine(logBuilder, message);
-                }
+                AppendAndReplaceNewLine(logBuilder, message);
+            }
 
-                // exception
-                // System.InvalidOperationException at Namespace.Class.Function() in File:line X
-                if (exception != null)
-                {
-                    logBuilder.Append(' ');
-                    AppendAndReplaceNewLine(logBuilder, exception.ToString());
-                }
+            // exception
+            // System.InvalidOperationException at Namespace.Class.Function() in File:line X
+            if (exception != null)
+            {
+                logBuilder.Append(' ');
+                AppendAndReplaceNewLine(logBuilder, exception.ToString());
+            }
 
-                // newline delimiter
-                logBuilder.Append(Environment.NewLine);
+            // newline delimiter
+            logBuilder.Append(Environment.NewLine);
 
-                targetConsole.Write(logBuilder.ToString(), null, null);
+            console.Write(logBuilder.ToString(), null, null);
 
-                logBuilder.Clear();
-                if (logBuilder.Capacity > 1024)
-                {
-                    logBuilder.Capacity = 1024;
-                }
-                _logBuilder = logBuilder;
-            };
+            logBuilder.Clear();
+            if (logBuilder.Capacity > 1024)
+            {
+                logBuilder.Capacity = 1024;
+            }
+            _logBuilder = logBuilder;
 
             static void AppendAndReplaceNewLine(StringBuilder sb, string message)
             {

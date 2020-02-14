@@ -8,6 +8,6 @@ namespace Microsoft.Extensions.Logging.Console
     public interface ILogFormatter
     {
         string Name { get; }
-        Action<IConsole, IConsole> Format(IExternalScopeProvider scopeProvider, LogLevel logLevel, string logName, int eventId, string message, Exception exception);
+        void Format(IConsole console, IExternalScopeProvider scopeProvider, LogLevel logLevel, string logName, int eventId, string message, Exception exception);
     }
 }
