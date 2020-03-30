@@ -58,7 +58,79 @@
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>5eda36ed557d789d888647745782b261472b9fa3</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Extensions.Primitives" Version="5.0.0-preview.3-runtime.20169.13" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Extensions.Caching.Abstractions" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Caching.Memory" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Configuration" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Configuration.Json" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.FileProviders.Physical" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Hosting" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Http" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Logging" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Logging.Configuration" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Logging.Console" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Logging.EventLog" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Options" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Extensions.Primitives" Version="5.0.0-preview.3-runtime.20179.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>c0ddd1c5d1636de873398c8d9544e02289f95fec</Sha>
     </Dependency>

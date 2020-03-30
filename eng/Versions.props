@@ -58,7 +58,25 @@
     <MicrosoftNETCoreAppInternalPackageVersion>5.0.0-preview.3.20179.1</MicrosoftNETCoreAppInternalPackageVersion>
     <!-- Packages from dotnet/runtime -->
     <MicrosoftBclAsyncInterfacesPackageVersion>1.0.0</MicrosoftBclAsyncInterfacesPackageVersion>
-    <MicrosoftExtensionsPrimitivesPackageVersion>5.0.0-preview.3-runtime.20169.13</MicrosoftExtensionsPrimitivesPackageVersion>
+    <MicrosoftExtensionsCachingAbstractionsPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsCachingAbstractionsPackageVersion>
+    <MicrosoftExtensionsCachingMemoryPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsCachingMemoryPackageVersion>
+    <MicrosoftExtensionsConfigurationPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsConfigurationPackageVersion>
+    <MicrosoftExtensionsConfigurationAbstractionsPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsConfigurationAbstractionsPackageVersion>
+    <MicrosoftExtensionsConfigurationEnvironmentVariablesPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsConfigurationEnvironmentVariablesPackageVersion>
+    <MicrosoftExtensionsConfigurationFileExtensionsPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsConfigurationFileExtensionsPackageVersion>
+    <MicrosoftExtensionsConfigurationJsonPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsConfigurationJsonPackageVersion>
+    <MicrosoftExtensionsDependencyInjectionPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsDependencyInjectionPackageVersion>
+    <MicrosoftExtensionsDependencyInjectionAbstractionsPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsDependencyInjectionAbstractionsPackageVersion>
+    <MicrosoftExtensionsFileProvidersPhysicalPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsFileProvidersPhysicalPackageVersion>
+    <MicrosoftExtensionsHostingPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsHostingPackageVersion>
+    <MicrosoftExtensionsHttpPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsHttpPackageVersion>
+    <MicrosoftExtensionsLoggingPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsLoggingPackageVersion>
+    <MicrosoftExtensionsLoggingAbstractionsPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsLoggingAbstractionsPackageVersion>
+    <MicrosoftExtensionsLoggingConfigurationPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsLoggingConfigurationPackageVersion>
+    <MicrosoftExtensionsLoggingConsolePackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsLoggingConsolePackageVersion>
+    <MicrosoftExtensionsLoggingEventLogPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsLoggingEventLogPackageVersion>
+    <MicrosoftExtensionsOptionsPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsOptionsPackageVersion>
+    <MicrosoftExtensionsPrimitivesPackageVersion>5.0.0-preview.3-runtime.20179.1</MicrosoftExtensionsPrimitivesPackageVersion>
     <MicrosoftWin32RegistryPackageVersion>5.0.0-preview.3.20179.1</MicrosoftWin32RegistryPackageVersion>
     <SystemComponentModelAnnotationsPackageVersion>5.0.0-preview.3.20179.1</SystemComponentModelAnnotationsPackageVersion>
     <SystemDiagnosticsDiagnosticSourcePackageVersion>5.0.0-preview.3.20179.1</SystemDiagnosticsDiagnosticSourcePackageVersion>
